@@ -12,9 +12,9 @@
     <artifactId>distributed-transaction</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>jta</module>
+        <module>dt-jta</module>
     </modules>
-    <name>分布式事务</name>
+    <name>distributed-transaction</name>
 
 
 </project>

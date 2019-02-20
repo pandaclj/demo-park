@@ -15,54 +15,67 @@
     <!-- 自动扫描(自动注入) -->
     <aop:aspectj-autoproxy/>
 
-    <bean id="dataSourceA" class="com.atomikos.jdbc.nonxa.AtomikosNonXADataSourceBean" init-method="init"  destroy-method="close">
+    <!--member configuration start-->
+    <bean id="memberDataSource" class="com.atomikos.jdbc.nonxa.AtomikosNonXADataSourceBean" init-method="init"  destroy-method="close">
         <property name="uniqueResourceName" value="XA1DBMS" />
-
-        <property name="url" value="jdbc:mysql://localhost:3306/test?useUnicode=true&amp;characterEncoding=utf-8" />
+        <property name="url" value="jdbc:mysql://10.1.128.55:3306/member?useUnicode=true&amp;characterEncoding=utf-8" />
         <property name="user" value="root" />
-        <property name="password" value="xxxx" />
+        <property name="password" value="123456" />
         <property name="driverClassName" value="com.mysql.jdbc.Driver" />
-
         <property name="poolSize" value="3" />
         <property name="minPoolSize" value="3" />
         <property name="maxPoolSize" value="5" />
     </bean>
 
-    <bean id="dataSourceB" class="com.atomikos.jdbc.nonxa.AtomikosNonXADataSourceBean" init-method="init" destroy-method="close">
-        <property name="uniqueResourceName" value="XA2DBMS" />
-
-        <property name="url" value="jdbc:mysql://localhost:3306/test2?useUnicode=true&amp;characterEncoding=utf-8" />
-        <property name="user" value="root" />
-        <property name="password" value="xxxx" />
-        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
-
-        <property name="poolSize" value="3" />
-        <property name="minPoolSize" value="3" />
-        <property name="maxPoolSize" value="5" />
-    </bean>
-
-    <bean id="merchantSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <bean id="memberSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="mapperLocations">
             <list>
-                <value>classpath:com/dfire/soa/merchant/mapper/*.xml</value>
-                <value>classpath:com/dfire/soa/merchant/task/mapper/*.xml</value>
+                <value>classpath:com/panda/demo/dt/jta/member/mapper/*.xml</value>
             </list>
         </property>
-        <property name="dataSource" ref="merchantDataSource"/>
+        <property name="dataSource" ref="memberDataSource"/>
     </bean>
 
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.dfire.soa.merchant.mapper,com.dfire.soa.merchant.task.mapper"/>
-        <property name="sqlSessionFactoryBeanName" value="merchantSqlSessionFactory"/>
+        <property name="basePackage" value="com.panda.demo.dt.jta.member.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="memberSqlSessionFactory"/>
     </bean>
+    <!--member configuration end-->
+
+    <!--trade configuration start-->
+    <bean id="tradeDataSource" class="com.atomikos.jdbc.nonxa.AtomikosNonXADataSourceBean" init-method="init" destroy-method="close">
+        <property name="uniqueResourceName" value="XA2DBMS" />
+        <property name="url" value="jdbc:mysql://10.1.128.55:3306/trade?useUnicode=true&amp;characterEncoding=utf-8" />
+        <property name="user" value="root" />
+        <property name="password" value="123456" />
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+        <property name="poolSize" value="3" />
+        <property name="minPoolSize" value="3" />
+        <property name="maxPoolSize" value="5" />
+    </bean>
+
+    <bean id="tradeSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="mapperLocations">
+            <list>
+                <value>classpath:com/panda/demo/dt/jta/trade/mapper/*.xml</value>
+            </list>
+        </property>
+        <property name="dataSource" ref="tradeDataSource"/>
+    </bean>
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.panda.demo.dt.jta.trade.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="tradeSqlSessionFactory"/>
+    </bean>
+    <!--trade configuration end-->
 
     <bean id="userTransaction" class="com.atomikos.icatch.jta.UserTransactionImp">
         <property name="transactionTimeout" value="300" />
     </bean>
 
-    <bean id="springTransactionManager" class="org.springframework.transaction.jta.JtaTransactionManager">
+    <bean id="springJtaTransactionManager" class="org.springframework.transaction.jta.JtaTransactionManager">
         <property name="userTransaction" ref="userTransaction" />
     </bean>
 
-    <tx:annotation-driven transaction-manager="springTransactionManager"/>
+    <tx:annotation-driven transaction-manager="springJtaTransactionManager"/>
 </beans>
