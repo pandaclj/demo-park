@@ -1,7 +1,8 @@
 ## 搭建环境
 1.mysql
 
-##SQL
+##sql
+
 
 ```sql
 #trade库
