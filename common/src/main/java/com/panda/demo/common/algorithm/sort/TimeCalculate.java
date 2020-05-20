@@ -35,17 +35,17 @@ public class TimeCalculate {
         }
 
         System.out.println("冒泡排序");
-        TimeCalculate.sort((a) -> BubbleSort.sort2(a), list, list2);
+        TimeCalculate.sort((a) -> BubbleSort.sort(a), list, list2);
         System.out.println("选择排序");
-        TimeCalculate.sort((a) -> SelectorSort.sort2(a), list, list2);
+        TimeCalculate.sort((a) -> SelectorSort.sort(a), list, list2);
         System.out.println("插入排序");
-        TimeCalculate.sort((a) -> InsertSort.sort2(a), list, list2);
+        TimeCalculate.sort((a) -> InsertSort.sort(a), list, list2);
         System.out.println("希尔排序");
         TimeCalculate.sort((a) -> XiErSort.sort(a), list, list2);
         System.out.println("归并排序");
         TimeCalculate.sort((a) -> MergeSort.sort(a), list, list2);
         System.out.println("快速排序");
-        TimeCalculate.sort((a) -> QuickSort.sort(a, 0, a.length - 1), list, list2);
+        TimeCalculate.sort((a) -> QuickSort.sort(a), list, list2);
     }
 
 }

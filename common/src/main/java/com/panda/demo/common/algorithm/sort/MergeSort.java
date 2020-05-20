@@ -6,6 +6,9 @@ import java.util.Arrays;
 
 /**
  * 归并排序
+ * <p>
+ *     核心思想是将数组分成左右两部分，递归分，直到每部分列表长度都是1，然后将左右两个有序数组进行合并
+ * </p>
  *
  * @author huixiangdou
  * @date 2019-03-18

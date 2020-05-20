@@ -13,43 +13,39 @@ import com.alibaba.fastjson.JSON;
  * @date 2019-03-12
  */
 public class SelectorSort {
+    //不需要开辟额外的内存空间
     public static void sort(int[] list) {
-        int currentIndex = 1; //未排好序的第一个元素
-        while (currentIndex <= list.length) {
-            int minIndex = currentIndex - 1; //假定最小值为当前轮次的第一个元素
-            for (int i = currentIndex; i < list.length; i++) {
-                if (list[i] < list[minIndex]) {
-                    minIndex = i; //更换最小值下标
+        for (int i = 0; i < list.length - 1; i++) {
+            for (int j = i + 1; j < list.length; j++) {
+                if (list[i] > list[j]) {
+                    list[i] = list[i] ^ list[j];
+                    list[j] = list[i] ^ list[j];
+                    list[i] = list[i] ^ list[j];
                 }
             }
-            if (minIndex != currentIndex - 1) {
-                int tmp = list[currentIndex - 1];
-                list[currentIndex - 1] = list[minIndex];
-                list[minIndex] = tmp;
-            }
-            currentIndex += 1;
         }
     }
 
+    //需要额外内存来记录临时数据
     public static void sort2(int[] list) {
-        for (int i = 0; i < list.length; i++) {
-            int minIndex = i;
-            for (int j = i; j < list.length; j++) {
-                if (list[j] < list[minIndex]) { //找到最小的数
-                    minIndex = j; //将最小数的索引保存
+        for (int i = 0; i < list.length - 1; i++) { //<=length-2
+            for (int j = i + 1; j < list.length; j++) { // <=length-1
+                if (list[i] > list[j]) {
+                    int temp = list[j];
+                    list[j] = list[i];
+                    list[i] = temp;
                 }
             }
-            int temp = list[minIndex];
-            list[minIndex] = list[i];
-            list[i] = temp;
         }
     }
 
     public static void main(String[] args) {
         int[] list = new int[]{3, 4, 5, 2, 1};
-//        int[] list = new int[]{1, 2, 3, 4, 5};
-//        int[] list = new int[]{1};
         SelectorSort.sort(list);
         System.out.println(JSON.toJSONString(list));
+
+        int[] list2 = new int[]{5, 4, 3, 2, 1};
+        SelectorSort.sort(list2);
+        System.out.println(JSON.toJSONString(list2));
     }
 }
