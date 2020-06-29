@@ -1,6 +1,4 @@
-package com.panda.demo.leetcode.title_1114;
-
-import java.util.concurrent.CountDownLatch;
+package com.panda.demo.leetcode.title_01114_按序打印;
 
 /**
  * 输入 1,2,3 或者 1,3,2 只是表明线程的启动顺序
@@ -8,11 +6,39 @@ import java.util.concurrent.CountDownLatch;
  * @author huixiangdou
  * @date 2020/5/13
  */
-public class Answer_1114_1 {
+public class Answer_1114_2 {
 
     static class Foo {
-        private CountDownLatch twoStart = new CountDownLatch(1);
-        private CountDownLatch threeStart = new CountDownLatch(1);
+        enum Run {
+            r1, r2, r3;
+        }
+
+        private volatile Enum runState = Run.r1;
+
+
+        public void first(Runnable printFirst) throws InterruptedException {
+            // printFirst.run() outputs "first". Do not change or remove this line.
+            while (runState != Run.r1) {
+            }
+            printFirst.run();
+            runState = Run.r2;
+        }
+
+        public void second(Runnable printSecond) throws InterruptedException {
+            // printSecond.run() outputs "second". Do not change or remove this line.
+            while (runState != Run.r2) {
+
+            }
+            printSecond.run();
+            runState = Run.r3;
+        }
+
+        public void third(Runnable printThird) throws InterruptedException {
+            // printThird.run() outputs "third". Do not change or remove this line.
+            while (runState != Run.r3) {
+            }
+            printThird.run();
+        }
 
 
         public Foo() {
@@ -50,25 +76,6 @@ public class Answer_1114_1 {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }
-
-        public void first(Runnable printFirst) throws InterruptedException {
-            // printFirst.run() outputs "first". Do not change or remove this line.
-            printFirst.run();
-            twoStart.countDown();
-        }
-
-        public void second(Runnable printSecond) throws InterruptedException {
-            // printSecond.run() outputs "second". Do not change or remove this line.
-            twoStart.await();
-            printSecond.run();
-            threeStart.countDown();
-        }
-
-        public void third(Runnable printThird) throws InterruptedException {
-            // printThird.run() outputs "third". Do not change or remove this line.
-            threeStart.await();
-            printThird.run();
         }
     }
 

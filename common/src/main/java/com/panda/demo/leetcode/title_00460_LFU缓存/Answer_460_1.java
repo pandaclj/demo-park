@@ -1,4 +1,4 @@
-package com.panda.demo.leetcode.title_460;
+package com.panda.demo.leetcode.title_00460_LFU缓存;
 
 /**
  * LFU

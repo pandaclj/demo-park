@@ -1,27 +1,22 @@
-package com.panda.demo.leetcode.title_1116;
+package com.panda.demo.leetcode.title_01116_打印零与奇偶数;
 
-import java.util.concurrent.locks.LockSupport;
+import java.util.concurrent.Semaphore;
 import java.util.function.IntConsumer;
 
 /**
- * Lock/Condition
- * 1把锁1个条件
+ * Semaphore
+ * 等于是三把锁，三个条件
  *
  * @author huixiangdou
  * @date 2020/5/14
  */
-public class Answer_1116_5 {
+public class Answer_1116_2 {
     static class ZeroEvenOdd {
         private int n;
-        private Thread t1;
-        private Thread t2;
-        private Thread t3;
 
-
-        enum Run {A, B, C}
-
-        private volatile Run run = Run.A;
-
+        private Semaphore A = new Semaphore(1);//0
+        private Semaphore B = new Semaphore(0);//偶数
+        private Semaphore C = new Semaphore(0);//奇数
 
         public ZeroEvenOdd(int n) {
             this.n = n;
@@ -29,65 +24,33 @@ public class Answer_1116_5 {
 
         // printNumber.accept(x) outputs "x", where x is an integer.
         public void zero(IntConsumer printNumber) throws InterruptedException {
-            if (t1 == null) {
-                t1 = Thread.currentThread();
-            }
-
             for (int i = 0; i < n; i++) {
-                while (run != Run.A) {
-                    LockSupport.park();
-                }
-
+                A.acquire();
                 printNumber.accept(0);
-
-                if (i % 2 == 0) {
-                    run = Run.C;
-                    if (t3 != null) {
-                        LockSupport.unpark(t3);
-                    }
-                } else {
-                    run = Run.B;
-                    if (t2 != null) {
-                        LockSupport.unpark(t2);
-                    }
+                if (i % 2 == 0) { //唤醒奇数
+                    C.release();
+                } else {//唤醒偶数
+                    B.release();
                 }
             }
-
         }
 
         //偶数
         public void even(IntConsumer printNumber) throws InterruptedException {
-            if (t2 == null) {
-                t2 = Thread.currentThread();
-            }
-
             for (int i = 2; i <= n; i = i + 2) {
-                while (run != Run.B) {
-                    LockSupport.park();
-                }
+                B.acquire();
                 printNumber.accept(i);
-                run = Run.A;
-                if (t1 != null) {
-                    LockSupport.unpark(t1);
-                }
+                A.release();
             }
-
         }
 
         //奇数
         public void odd(IntConsumer printNumber) throws InterruptedException {
-            if (t3 == null) {
-                t3 = Thread.currentThread();
-            }
             for (int i = 1; i <= n; i = i + 2) {
-                while (run != Run.C) {
-                    LockSupport.park();
-                }
+                C.acquire();
                 printNumber.accept(i);
-                run = Run.A;
-                LockSupport.unpark(t1);
+                A.release();
             }
-
         }
     }
 

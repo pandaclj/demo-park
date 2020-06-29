@@ -8,10 +8,13 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
+import org.springframework.util.ClassUtils;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Unit test for simple App.
@@ -323,8 +326,90 @@ public class AppTest {
         String s = "hello  world";
 
         String[] array = s.split(" ");
+    }
+
+    @Test
+    public void test_isJdkClass() {
+        System.out.println(Map.class.getClassLoader());
+
+        System.out.println(Map.class.getClass().getClassLoader());
+        System.out.println(new HashMap<>().getClass().getClassLoader());
+
+        System.out.println(ClassLoader.getSystemClassLoader());
+        System.out.println(Student.class.getClassLoader());
+        System.out.println(Thread.currentThread().getContextClassLoader());
+
+
+        System.out.println(ClassUtils.getDefaultClassLoader());
+    }
+
+    @Test
+    public void test_iterator_list() {
+        List<String> list = new ArrayList<>();
+        list.add("1");
+        list.add(null);
+        list.add("2");
+
+        for (String s : list) {
+            System.out.println(s);
+        }
+    }
+
+    @Test
+    public void test_type() {
+        System.out.println(Student.class instanceof Type);
+        System.out.println(Student.class.getTypeName());
+
+    }
+
+    @Test
+    public void test_string_split() {
+        String str = "a,b,c,,";
+        String[] array = str.split(",");
+        System.out.println(JSON.toJSONString(array));
+    }
+
+    @Test
+    public void test_toMap() {
+        Student s1 = new Student();
+        s1.setId("1");
+        s1.setName("小明");
+
+        Student s2 = new Student();
+        s2.setId("2");
+        s2.setName("小红");
+
+        List<Student> list = Lists.newArrayList(s1, s2);
+
+        Map<String, String> map = list.stream().collect(Collectors.toMap(Student::getId, Student::getName));
+//        Map<String,String> map = list.stream().collect(Collectors.toMap(Student::getId,Student::getName,(x,y)->y));
+
+        System.out.println(JSON.toJSONString(map));
 
 
     }
+
+    @Test
+    public void test_list_remove() {
+        List<String> list = new ArrayList<>();
+        list.add("1");
+        list.add("2");
+        Iterator<String> iterator = list.iterator();
+//        while (iterator.hasNext()) {
+//            String item = iterator.next();
+//            if ("1".equals(item)) {
+//                iterator.remove();
+//            }
+//        }
+
+        for (String item : list) {
+            if ("2".equals(item)) {
+                list.remove(item);
+            }
+        }
+
+        System.out.println(JSON.toJSONString(list));
+    }
+
 
 }

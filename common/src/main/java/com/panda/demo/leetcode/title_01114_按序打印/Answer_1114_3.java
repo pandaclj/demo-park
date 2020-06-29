@@ -1,4 +1,4 @@
-package com.panda.demo.leetcode.title_1114;
+package com.panda.demo.leetcode.title_01114_按序打印;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -8,49 +8,35 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author huixiangdou
  * @date 2020/5/13
  */
-public class Answer_1114_4 {
+public class Answer_1114_3 {
 
     static class Foo {
 
         private volatile AtomicInteger runState = new AtomicInteger(1);
-        private Object lock = new Object();
 
 
         public void first(Runnable printFirst) throws InterruptedException {
             // printFirst.run() outputs "first". Do not change or remove this line.
-            synchronized (lock) {
-                if (runState.get() != 1) {
-                    lock.wait();
-                }
-                printFirst.run();
-                runState.compareAndSet(1, 2);
-                lock.notifyAll();
+            while (runState.get() != 1) {
             }
-
-
+            printFirst.run();
+            runState.set(2);
         }
 
         public void second(Runnable printSecond) throws InterruptedException {
             // printSecond.run() outputs "second". Do not change or remove this line.
-            synchronized (lock) {
-                if (runState.get() != 2) {
-                    lock.wait();
-                }
-                printSecond.run();
-                runState.compareAndSet(2, 3);
-                lock.notifyAll();
+            while (runState.get() != 2) {
+
             }
+            printSecond.run();
+            runState.set(3);
         }
 
         public void third(Runnable printThird) throws InterruptedException {
             // printThird.run() outputs "third". Do not change or remove this line.
-            synchronized (lock) {
-                if (runState.get() != 3) {
-                    lock.wait();
-                }
-                printThird.run();
+            while (runState.get() != 3) {
             }
-
+            printThird.run();
         }
 
 

@@ -1,4 +1,4 @@
-package com.panda.demo.leetcode.title_146;
+package com.panda.demo.leetcode.title_00146_LRU缓存机制;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
