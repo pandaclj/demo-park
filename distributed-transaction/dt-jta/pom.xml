@@ -15,7 +15,7 @@
     <name>dt-jta</name>
 
     <properties>
-        <spring_version>5.1.5.RELEASE</spring_version>
+        <spring_version>5.2.20.RELEASE</spring_version>
         <mysql-connector-java-version>5.1.26</mysql-connector-java-version>
         <mybatis-spring-version>1.2.2</mybatis-spring-version>
         <mybatis-version>3.3.1</mybatis-version>
